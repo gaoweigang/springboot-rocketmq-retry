@@ -66,21 +66,4 @@
 
 
 	</dependencies>
-
-	<build>
-		<plugins>
-			<!-- Spring Boot提供了一个用于创建可执行jars的Maven插件 -->
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>com.gwg.demo.Application</mainClass>
-				</configuration>
-				<!-- <dependencies> 在我们开发过程中，我们需要经常修改，为了避免重复启动项目，我们可以启用热部署。 启动热部署的时候 
-					无法debug，而且无法读取命令行参数，但是可以读取环境变量 <dependency> <groupId>org.springframework</groupId> 
-					<artifactId>springloaded</artifactId> <version>1.2.5.RELEASE</version> </dependency> 
-					</dependencies> -->
-			</plugin>
-		</plugins>
-	</build>
 </project>
