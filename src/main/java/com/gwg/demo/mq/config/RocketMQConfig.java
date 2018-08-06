@@ -1,6 +1,7 @@
 package com.gwg.demo.mq.config;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -11,7 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.gwg.demo.mq.common.MQAccessBuilder;
-import com.gwg.demo.mq.process.UserProccess;
+import com.gwg.demo.mq.common.MessageListenerConcurrentlyImpl;
+import com.gwg.demo.mq.process.UserMessageProcess;
 
 @Configuration
 public class RocketMQConfig {
@@ -49,9 +51,18 @@ public class RocketMQConfig {
 	
 	@Bean 
 	public DefaultMQPushConsumer defaultMQPushConsumer() throws MQClientException{
-		DefaultMQPushConsumer consumer = mqAccessBuilder().defaultMQPushConsumer(consumerGroup, namesrvAddr, "TopicTest", "*", ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET, new UserProccess());
+		DefaultMQPushConsumer consumer = mqAccessBuilder().defaultMQPushConsumer(consumerGroup, namesrvAddr, "TopicTest", "*", ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+		consumer.setMessageListener(messageListenerConcurrently());
 		consumer.start();//启动消费者监听
 		return consumer;
+	}
+
+	/**
+	 * 消息逻辑处理
+	 */
+	@Bean("userMessageProcess")
+	public <T> MessageListenerConcurrently messageListenerConcurrently(){
+		return new MessageListenerConcurrentlyImpl(new UserMessageProcess<T>());
 	}
 	
 	

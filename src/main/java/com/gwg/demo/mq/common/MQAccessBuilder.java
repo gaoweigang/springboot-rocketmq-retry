@@ -22,7 +22,7 @@ public class MQAccessBuilder {
 	
 	
 	//构建消费者
-    public DefaultMQPushConsumer defaultMQPushConsumer(String consumerGroup, String namesrvAddr, String topic, String subExpression, ConsumeFromWhere consumeFromWhere, MessageListenerConcurrently messageListener) throws MQClientException{
+    public DefaultMQPushConsumer defaultMQPushConsumer(String consumerGroup, String namesrvAddr, String topic, String subExpression, ConsumeFromWhere consumeFromWhere) throws MQClientException{
     	//消费者的组名
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(consumerGroup);
         //指定NameServer地址，多个地址以 ; 隔开
@@ -33,7 +33,7 @@ public class MQAccessBuilder {
         //设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         //如果非第一次启动，那么按照上次消费的位置继续消费
         consumer.setConsumeFromWhere(consumeFromWhere);
-        consumer.registerMessageListener(messageListener);
+        //consumer.registerMessageListener(messageListener);
         return consumer;
     }
 }
