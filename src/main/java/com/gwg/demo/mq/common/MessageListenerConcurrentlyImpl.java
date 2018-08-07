@@ -22,18 +22,17 @@ public class MessageListenerConcurrentlyImpl implements MessageListenerConcurren
 	@Override
 	public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 		  try {
-			  logger.info("消费消息 start ===========================================");
+			  logger.info("消费消息 start =============================线程id:{},消息数量：{}", Thread.currentThread().getId(), msgs.size());
               for (MessageExt messageExt : msgs) {
-
                   String messageBody = new String(messageExt.getBody(), RemotingHelper.DEFAULT_CHARSET);
-                  logger.info("messageExt: {}" , messageBody);//输出消息内容
+            	  logger.info("消息：{}， 重试次数：{}", messageBody, messageExt.getReconsumeTimes());
                   DetailRes result = messageProcess.process(messageBody);
                   System.out.println("消费响应：msgId : " + messageExt.getMsgId() + ",  msgBody : " + messageBody);//输出消息内容
                   if(result.isSuccess){
                 	  return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;//消费成功
                   }else{
                 	  //消费失败 重试
-                	  logger.info("消费失败重试 start .......");
+                	  logger.info("消费失败重试 .......");
                 	  return ConsumeConcurrentlyStatus.RECONSUME_LATER;//重试
                   }
               }
